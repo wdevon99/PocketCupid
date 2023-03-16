@@ -25,6 +25,7 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     color: '#232323',
     textAlign: 'center',
+    marginTop: 50,
   },
   image: {
     width: 300,
