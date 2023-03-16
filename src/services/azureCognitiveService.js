@@ -1,64 +1,114 @@
 import axios from 'axios';
 // import fs from 'fs';
-import ImagePicker from 'react-native-image-crop-picker';
+import RNFetchBlob from 'rn-fetch-blob';
+// axios.interceptors.response.use(
+//   req => {
+//     console.log('success', req);
+//     return req;
+//   },
+//   error => {
+//     console.log('error', error.response);
+//     return error;
+//   },
+// );
 
-const getImage = async image => {
-  const photo = {
-    // uri: image.sourceURL,
-    url: image,
-    type: 'image/png',
-    // name: `photo-${index}.jpg`,
+const getEmotionDataFetch = image => {
+  const subscriptionKey = 'e8c01125502d4563b90ecdd6a648b5a8';
+  const endpoint = 'https://unihackfacedetectapi.cognitiveservices.azure.com/';
+  const imageUrl = image.sourceURL;
+
+  const uri = image.path;
+  const filename = uri.substring(uri.lastIndexOf('/') + 1);
+  const headers = {
+    'Content-Type': 'application/octet-stream',
+    'Ocp-Apim-Subscription-Key': subscriptionKey,
   };
 
-  const form = new FormData();
-  form.append('File', photo);
+  RNFetchBlob.fetch(
+    'POST',
+    endpoint + '/face/v1.0/detect?returnFaceAttributes=emotion,age,gender',
+    headers,
+    RNFetchBlob.wrap(image.path),
+  )
+    .then(res => {
+      console.log(' the res --> ', res);
+    })
+    .catch(err => {
+      console.log(' the error --> ', err);
+    });
+  // return RNFetchBlob.fs
+  //   .readFile(image.path, 'base64')
+  //   .then(data => {
+  //     const body = data;
 
-  return form;
+  //     return RNFetchBlob.fetch(
+  //       'POST',
+  //       endpoint + '/face/v1.0/detect?returnFaceAttributes=emotion,age,gender',
+  //       headers,
+  //       body,
+  //     );
+  //   })
+  //   .then(response => {
+  //     return response.json();
+  //   })
+  //   .then(data => {
+  //     console.log('response', data);
+  //   })
+  //   .catch(error => {
+  //     console.log('error', error);
+  //   });
+
+  // const body = {
+  //   url: imageUrl,
+  //   returnFaceAttributes: 'emotion,age,gender',
+  // };
+
+  // fetch(endpoint + '/face/v1.0/detect', {
+  //   method: 'POST',
+  //   headers: headers,
+  //   body: JSON.stringify(body),
+  // })
+  //   .then(response => {
+  //     return response.json();
+  //   })
+  //   .then(data => {
+  //     console.log('response', data);
+  //   })
+  //   .catch(error => {
+  //     console.log('error', error);
+  //   });
 };
+
 const getEmotionData = image => {
-  console.log('hittt');
   const AZURE_END_POINT =
     'https://unihackfacedetectapi.cognitiveservices.azure.com/';
   const AZURE_API_KEY = 'e8c01125502d4563b90ecdd6a648b5a8';
-  const headers = {
-    'Content-Type': 'application/png',
-    'Ocp-Apim-Subscription-Key': AZURE_API_KEY,
-  };
-
-  // const url = `${AZURE_END_POINT}/face/v1.0/detect?returnFaceLandmarks-true&returnFaceAttributes=headPose,glasses,occlusion,accessories&recognitionModel=recognition_03&faceldTimeToLive=60`;
-  // const fileStream = getImage(image);
-  // console.log('xfileStream', fileStream);
-  // axios
-  //   .post(url, fileStream, {headers: headers})
-  //   .then(rep => {
-  //     console.log('rep', rep);
-  //   })
-  //   .catch(error => {
-  //     console.log(error);
-  //   });
-
-  const faceAttributes =
-    'age,gender,headPose,smile,facialHair,glasses,emotion,hair,makeup,occlusion,accessories,blur,exposure,noise';
-  const detectionModel = 'detection_01';
-  const faceApiForUrl = axios.create({
-    baseURL: AZURE_END_POINT,
-    timeout: 50000,
-    headers: {
-      'Ocp-Apim-Subscription-Key': AZURE_API_KEY,
-      'Content-Type': 'application/json',
-    },
-    params: {
-      returnFaceId: true,
-      returnFaceLandmarks: false,
-      returnFaceAttributes: faceAttributes,
-      detectionModel: detectionModel,
-    },
+  const formData = new FormData();
+  formData.append('photo', {
+    uri: image.sourceURL,
+    type: image.mime,
+    name: image.filename,
   });
-  return faceApiForUrl.post('/face/v1.0/detect', {
-    url: image.sourceURL,
-  });
+  axios
+    .post(
+      'https://unihackfacedetectapi.cognitiveservices.azure.com/face/v1.0/detect?returnFaceAttributes=emotion',
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'Ocp-Apim-Subscription-Key': AZURE_API_KEY,
+        },
+      },
+    )
+    .then(response => {
+      console.log('response', response.data);
+    })
+    .catch(error => {
+      console.log('resp error', error);
+    });
 };
 
 export default {
   getEmotionData,
+  getEmotionDataFetch,
 };
