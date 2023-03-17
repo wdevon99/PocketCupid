@@ -4,11 +4,13 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import MainScreen from '../screens/MainScreen';
 import IntroScreen from '../screens/IntroScreen';
 import EmotionResultsScreen from '../screens/EmotionResultsScreen';
+import ScanFaceScreen from '../screens/ScanFaceScreen';
+
 const Stack = createNativeStackNavigator();
 export default function RootNavigation() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="EmotionResults">
+      <Stack.Navigator initialRouteName="ScanFace">
         <Stack.Screen
           name="MainScreen"
           options={{headerShown: true}}
@@ -18,6 +20,11 @@ export default function RootNavigation() {
           name="IntroScreen"
           options={{headerShown: false}}
           component={IntroScreen}
+        />
+        <Stack.Screen
+          name="ScanFace"
+          options={{headerShown: false}}
+          component={ScanFaceScreen}
         />
         <Stack.Screen
           name="EmotionResults"
