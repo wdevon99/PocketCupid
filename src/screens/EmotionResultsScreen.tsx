@@ -63,8 +63,8 @@ const EmotionResultsScreen = () => {
             <Text style={styles.resultInText}>
               Your partner is in a normal mood in this image
             </Text>
-            <Text style={styles.resultPercentage}>50%</Text>
           </View>
+          <Text style={styles.resultPercentage}>50%</Text>
         </View>
         <View style={styles.actionsContainer}>
           <TouchableOpacity style={styles.actionButton}>
