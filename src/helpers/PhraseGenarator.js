@@ -20,13 +20,25 @@ export const ConvertEmotionToPhrase = (input, option) => {
       blurredLikelihood,
     };
   })(input.responses[0].faceAnnotations[0]);
-
-  const emotionLevel = Object.keys(emotionsDetails).find(c => {
+  let emotionLevel = Object.keys(emotionsDetails).find(c => {
     if (emotionsDetails[c] === 'VERY_LIKELY') {
       return c;
     }
   });
-
+  if (!emotionLevel) {
+    emotionLevel = Object.keys(emotionsDetails).find(c => {
+      if (emotionsDetails[c] === 'LIKELY') {
+        return c;
+      }
+    });
+  }
+  if (!emotionLevel) {
+    emotionLevel = Object.keys(emotionsDetails).find(c => {
+      if (emotionsDetails[c] === 'POSSIBLY') {
+        return c;
+      }
+    });
+  }
   let emotionSuffix = '';
   let emotion = '';
 
