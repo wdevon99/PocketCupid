@@ -24,12 +24,12 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
     fontWeight: '400',
     color: '#232323',
-    textAlign: 'center',
+    textAlign: 'left',
     marginTop: 50,
   },
   image: {
-    width: 300,
-    height: 400,
+    width: 250,
+    height: 350,
   },
 });
 
@@ -59,7 +59,7 @@ const IntroScreen = (props: {
 
   const handleNext = () => {
     if (index === 3) {
-      props.navigation.navigate('MainScreen');
+      props.navigation.navigate('ScanFace');
     } else {
       setIndex(index + 1);
       viewPager?.current?.setPage(index);
@@ -94,7 +94,7 @@ const IntroScreen = (props: {
       <View style={styles.childWrapper}>
         <View style={styles.rowContainer}>
           <TouchableOpacity
-            onPress={() => props.navigation.navigate('MainScreen')}>
+            onPress={() => props.navigation.navigate('ScanFace')}>
             <Text style={styles.skipText}>Skip</Text>
           </TouchableOpacity>
           <TouchableOpacity
