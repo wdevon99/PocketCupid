@@ -94,7 +94,7 @@ const IntroScreen = (props: {
       <View style={styles.childWrapper}>
         <View style={styles.rowContainer}>
           <TouchableOpacity
-            onPress={() => props.navigation.navigate('MainScreen')}>
+            onPress={() => props.navigation.navigate('ScanFace')}>
             <Text style={styles.skipText}>Skip</Text>
           </TouchableOpacity>
           <TouchableOpacity
