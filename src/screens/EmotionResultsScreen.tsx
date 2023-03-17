@@ -1,6 +1,9 @@
+import {useRoute} from '@react-navigation/native';
 import * as React from 'react';
 import {StyleSheet, Text, TouchableOpacity, View, Image} from 'react-native';
 import ViewWrapper from '../components/layouts/ViewWrapper/ViewWrapper.component';
+import {AskChatGtp} from '../helpers/ChatGtp';
+import {ConvertEmotionToPhrase, Options} from '../helpers/PhraseGenarator';
 
 const styles = StyleSheet.create({
   mainContainer: {
@@ -97,6 +100,19 @@ const styles = StyleSheet.create({
 const EmotionResultsScreen = (props: {
   navigation: {navigate: {goBack: () => void}};
 }) => {
+  const route = useRoute();
+
+  const onOptionSelected = async option => {
+    const {emotionsInput} = route.params;
+    const phrase = ConvertEmotionToPhrase(emotionsInput, option);
+
+    console.log('phrase => ', phrase);
+
+    const choices = await AskChatGtp(phrase);
+
+    console.log('choices => ', choices);
+  };
+
   return (
     <ViewWrapper>
       <View style={styles.mainContainer}>
@@ -136,21 +152,27 @@ const EmotionResultsScreen = (props: {
         <View style={styles.resultsContainer}>
           <View style={styles.resultsBox}>
             <Text style={styles.resultInText}>You could...</Text>
-            <TouchableOpacity style={styles.actionButton}>
+            <TouchableOpacity
+              style={styles.actionButton}
+              onPress={() => onOptionSelected(Options.SONG)}>
               <Image
                 style={styles.actionIcon}
                 source={require('../assets/song.png')}
               />
               <Text style={styles.actionText}>Play them a song</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.actionButton}>
+            <TouchableOpacity
+              style={styles.actionButton}
+              onPress={() => onOptionSelected(Options.QUOTE)}>
               <Image
                 style={styles.actionIcon}
                 source={require('../assets/video.png')}
               />
-              <Text style={styles.actionText}>Show them a video</Text>
+              <Text style={styles.actionText}>Show them a quote</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.actionButton}>
+            <TouchableOpacity
+              style={styles.actionButton}
+              onPress={() => onOptionSelected(Options.JOKE)}>
               <Image
                 style={styles.actionIcon}
                 source={require('../assets/joke.png')}

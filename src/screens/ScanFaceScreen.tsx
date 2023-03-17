@@ -9,6 +9,8 @@ import {
 } from 'react-native';
 import ViewWrapper from '../components/layouts/ViewWrapper/ViewWrapper.component';
 import ImagePicker from 'react-native-image-crop-picker';
+import azureCognitiveService from '../services/azureCognitiveService';
+import {useNavigation} from '@react-navigation/native';
 
 const styles = StyleSheet.create({
   mainContainer: {
@@ -52,6 +54,7 @@ const styles = StyleSheet.create({
 });
 
 const ScanFaceScreen = () => {
+  const navigation = useNavigation();
   const [photo, setPhoto] = React.useState(null);
 
   const handleOnCaptureInit = () => {
@@ -102,8 +105,11 @@ const ScanFaceScreen = () => {
       });
   };
 
-  const handleScanPhoto = () => {
-    // to send the api
+  const handleScanPhoto = async () => {
+    const res = await azureCognitiveService.getEmotionData(photo);
+    const emotionsInput = res.data;
+
+    navigation.navigate('EmotionResults', {emotionsInput});
   };
 
   console.log('Image Display', photo?.path);

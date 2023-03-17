@@ -1,4 +1,5 @@
 import axios from 'axios';
+import json from './sample';
 
 const getEmotionData = async image => {
   const KEY = '';
@@ -19,19 +20,21 @@ const getEmotionData = async image => {
     ],
   };
 
-  const response = axios.post(
-    'https://vision.googleapis.com/v1/images:annotate',
-    body,
-    {
-      headers: {
-        Authorization: KEY,
-        'x-goog-user-project': 'sinuous-vent-253013',
-        'Content-Type': 'application/json; charset=utf-8',
-      },
-    },
-  );
+  // const response = axios.post(
+  //   'https://vision.googleapis.com/v1/images:annotate',
+  //   body,
+  //   {
+  //     headers: {
+  //       Authorization: KEY,
+  //       'x-goog-user-project': 'sinuous-vent-253013',
+  //       'Content-Type': 'application/json; charset=utf-8',
+  //     },
+  //   },
+  // );
 
-  return await response;
+  // return await response;
+
+  return {data: json};
 };
 
 export default {
