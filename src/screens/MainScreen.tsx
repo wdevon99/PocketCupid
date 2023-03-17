@@ -7,10 +7,10 @@ const MainScreen = () => {
   const handlePhotoSelect = () => {
     ImagePicker.openPicker({
       mediaType: 'photo',
-      includeBase64: false,
+      includeBase64: true,
     })
       .then(image => {
-        azureCognitiveService.getEmotionDataFetch(image);
+        azureCognitiveService.getEmotionData(image);
       })
       .catch(error => {
         console.log(error);
