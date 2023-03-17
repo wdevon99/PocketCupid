@@ -1,6 +1,8 @@
 import axios from 'axios';
 
-const getEmotionData = image => {
+const getEmotionData = async image => {
+  const KEY = '';
+
   const body = {
     requests: [
       {
@@ -16,20 +18,20 @@ const getEmotionData = image => {
       },
     ],
   };
-  axios
-    .post('https://vision.googleapis.com/v1/images:annotate', body, {
+
+  const response = axios.post(
+    'https://vision.googleapis.com/v1/images:annotate',
+    body,
+    {
       headers: {
-        Authorization: 'Get the token from chat',
+        Authorization: KEY,
         'x-goog-user-project': 'sinuous-vent-253013',
         'Content-Type': 'application/json; charset=utf-8',
       },
-    })
-    .then(response => {
-      console.log('response', response);
-    })
-    .catch(error => {
-      console.log('resp error', error);
-    });
+    },
+  );
+
+  return await response;
 };
 
 export default {
