@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {MutableRefObject, useEffect, useRef, useState} from 'react';
 import {Text, View, StyleSheet, Image, TouchableOpacity} from 'react-native';
 import ViewWrapper from '../components/layouts/ViewWrapper/ViewWrapper.component';
 import PagerView from 'react-native-pager-view';
@@ -54,7 +54,7 @@ const introArray = [
 const IntroScreen = (props: {
   navigation: {navigate: (arg0: string) => void};
 }) => {
-  const viewPager = useRef();
+  const viewPager = useRef() as MutableRefObject<PagerView>;
   const [index, setIndex] = useState(0);
 
   const handleNext = () => {
