@@ -1,6 +1,14 @@
 import * as React from 'react';
-import {Image, StyleSheet, Text, View} from 'react-native';
+import {
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  Alert,
+} from 'react-native';
 import ViewWrapper from '../components/layouts/ViewWrapper/ViewWrapper.component';
+import ImagePicker from 'react-native-image-crop-picker';
 
 const styles = StyleSheet.create({
   mainContainer: {
@@ -14,7 +22,6 @@ const styles = StyleSheet.create({
   },
   scanContainer: {
     flex: 3,
-    flexDirection: 'row',
     justifyContent: 'center',
     borderRadius: 14,
     backgroundColor: '#ffffff70',
@@ -26,17 +33,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   startNewScanBox: {
-    position: 'absolute',
     borderWidth: 1,
-    bottom: 25,
-    width: '60%',
     minWidth: 220,
     alignSelf: 'center',
     height: 50,
     borderRadius: 30,
-    paddingTop: 15,
     borderColor: 'gray',
     backgroundColor: 'black',
+    justifyContent: 'center',
+    marginBottom: 20,
   },
   startNewScan: {
     textAlign: 'center',
@@ -47,17 +52,89 @@ const styles = StyleSheet.create({
 });
 
 const ScanFaceScreen = () => {
+  const [photo, setPhoto] = React.useState(null);
+
+  const handleOnCaptureInit = () => {
+    Alert.alert(
+      'Select Image Source',
+      'Choose the source of the image',
+      [
+        {
+          text: 'Gallery',
+          onPress: () => handlePhotoSelect(),
+        },
+        {
+          text: 'Camera',
+          onPress: () => handleOnCameraCapture(),
+        },
+        {
+          text: 'Cancel',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+      ],
+      {cancelable: false},
+    );
+  };
+
+  const handleOnCameraCapture = async () => {
+    const image = await ImagePicker.openCamera({
+      includeBase64: true,
+      cropping: true,
+      height: 1000,
+      width: 1000,
+    });
+    console.log('Image', image);
+    setPhoto(image);
+  };
+
+  const handlePhotoSelect = () => {
+    ImagePicker.openPicker({
+      mediaType: 'photo',
+      includeBase64: true,
+    })
+      .then(image => {
+        // azureCognitiveService.getEmotionData(image);
+        setPhoto(image);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
+
+  const handleScanPhoto = () => {
+    // to send the api
+  };
+
+  console.log('Image Display', photo?.path);
   return (
     <ViewWrapper>
       <View style={styles.mainContainer}>
         <Text style={styles.title}>New Scan</Text>
         <View style={styles.scanContainer}>
           <View style={styles.scannerBox}>
-            <Image source={require('../assets/scanner-icon.png')} />
+            <Image
+              style={{width: 300, height: 300}}
+              source={
+                photo?.data
+                  ? {uri: `data:${photo.mime};base64,${photo.data}`}
+                  : require('../assets/scanner-icon.png')
+              }
+            />
           </View>
-          <View style={styles.startNewScanBox}>
-            <Text style={styles.startNewScan}>Start new scan 📷</Text>
-          </View>
+          {!photo?.data ? (
+            <TouchableOpacity onPress={handleOnCaptureInit}>
+              <View style={styles.startNewScanBox}>
+                <Text style={styles.startNewScan}>Take a photo 📷</Text>
+              </View>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity onPress={handleScanPhoto}>
+              <View style={styles.startNewScanBox}>
+                <Text style={styles.startNewScan}>Start Scan</Text>
+              </View>
+            </TouchableOpacity>
+          )}
         </View>
       </View>
     </ViewWrapper>
