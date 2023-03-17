@@ -10,7 +10,7 @@ const Stack = createNativeStackNavigator();
 export default function RootNavigation() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="MainScreen">
+      <Stack.Navigator initialRouteName="IntroScreen">
         <Stack.Screen
           name="MainScreen"
           options={{headerShown: true}}
