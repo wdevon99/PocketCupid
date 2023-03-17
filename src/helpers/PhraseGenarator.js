@@ -1,3 +1,4 @@
+import { MoodEmojies } from "../constants/imageConstants";
 export const Options = {
   SONG: 'SONG',
   JOKE: 'JOKE',
@@ -76,4 +77,75 @@ export const ConvertEmotionToPhrase = (input, option) => {
     case Options.QUOTE:
       return `Suggest a quote to ${emotionSuffix} ${emotion} person`;
   }
+};
+
+export const ReturnEmotionWithEmoji = (input) => {
+  const emotionsDetails = (({
+    angerLikelihood,
+    sorrowLikelihood,
+    surpriseLikelihood,
+    joyLikelihood,
+    blurredLikelihood,
+  }) => {
+    return {
+      angerLikelihood,
+      sorrowLikelihood,
+      surpriseLikelihood,
+      joyLikelihood,
+      blurredLikelihood,
+    };
+  })(input.responses[0].faceAnnotations[0]);
+  let emotionLevel = Object.keys(emotionsDetails).find(c => {
+    if (emotionsDetails[c] === 'VERY_LIKELY') {
+      return c;
+    }
+  });
+  if (!emotionLevel) {
+    emotionLevel = Object.keys(emotionsDetails).find(c => {
+      if (emotionsDetails[c] === 'LIKELY') {
+        return c;
+      }
+    });
+  }
+  if (!emotionLevel) {
+    emotionLevel = Object.keys(emotionsDetails).find(c => {
+      if (emotionsDetails[c] === 'POSSIBLY') {
+        return c;
+      }
+    });
+  }
+
+  switch (emotionLevel) {
+    case 'angerLikelihood':
+      return {
+        emotion: 'Angry',
+        emojy: MoodEmojies.angry,
+      };
+    case 'blurredLikelihood':
+      return {
+        emotion: 'Sad',
+        emojy: MoodEmojies.sad,
+      };
+    case 'joyLikelihood':
+      return {
+        emotion: 'Happy',
+        emojy: MoodEmojies.slightlySmile,
+      };
+    case 'sorrowLikelihood':
+      return {
+        emotion: 'Sorrow',
+        emojy: MoodEmojies.sad,
+      };
+    case 'surpriseLikelihood':
+      return {
+        emotion: 'Surprised',
+        emojy: MoodEmojies.surprised,
+      };
+    default:
+      return {
+        emotion: 'Happy',
+        emojy: MoodEmojies.slightlySmile,
+      };
+  }
+
 };

@@ -2,8 +2,7 @@ import {useRoute} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View, Image} from 'react-native';
 import ViewWrapper from '../components/layouts/ViewWrapper/ViewWrapper.component';
-import {AskChatGtp} from '../helpers/ChatGtp';
-import {ConvertEmotionToPhrase, Options, ReturnEmotionWithEmoji} from '../helpers/PhraseGenarator';
+import {ReturnEmotionWithEmoji} from '../helpers/PhraseGenarator';
 
 const styles = StyleSheet.create({
   mainContainer: {
@@ -93,38 +92,24 @@ const styles = StyleSheet.create({
   moodImage: {
     width: 150,
     height: 150,
-    marginTop: -35,
+    marginTop: -25,
   },
 });
 
-const EmotionResultsScreen = (props: {
-  navigation: {navigate: {goBack: () => void}};
+const ResultScreen = (props: {
+  navigation: {navigate: {goBack: () => void}},
 }) => {
   const route = useRoute();
 
-  const onOptionSelected = async option => {
-    const {emotionsInput} = route.params;
-    const phrase = ConvertEmotionToPhrase(emotionsInput, option);
-
-    console.log('phrase => ', phrase);
-
-    const choices = await AskChatGtp(phrase);
-
-    props.navigation.navigate('ResultScreen', {
-      choices: choices[0]?.message.content,
-      emotionInput: emotionsInput,
-    });
-
-    console.log('choices => ', choices);
-  };
-
+  const [choice, setChoice] = useState('');
   const [mood, setMood] = useState();
 
   useEffect(() => {
-    const {emotionsInput} = route.params;
-    const mood = ReturnEmotionWithEmoji(emotionsInput);
+    const {emotionInput} = route.params;
+    const mood = ReturnEmotionWithEmoji(emotionInput);
     setMood(mood);
-  },[])
+    setChoice(props.route?.params?.choices);
+  }, []);
 
   return (
     <ViewWrapper>
@@ -138,24 +123,18 @@ const EmotionResultsScreen = (props: {
               source={require('../assets/forward-arrow.png')}
             />
           </TouchableOpacity>
-          <Text style={styles.infoText}>
-            Based on the analysis it looks like person is
-          </Text>
         </View>
         <View style={styles.moodContainer}>
           <Image
             style={styles.moodImage}
             source={mood?.emojy || require('../assets/neutral.gif')}
           />
-          <View style={{flex: 1, paddingHorizontal: 10}}>
-            <Text style={{fontSize: 20, fontWeight: '300'}}>
-              This person seems
-            </Text>
+          <View
+            style={{flex: 1, paddingHorizontal: 5, justifyContent: 'center'}}>
             <Text
               style={{
-                fontSize: 40,
+                fontSize: 25,
                 fontWeight: '400',
-                lineHeight: 37,
                 marginVertical: 15,
               }}>
               {mood?.emotion}
@@ -164,34 +143,7 @@ const EmotionResultsScreen = (props: {
         </View>
         <View style={styles.resultsContainer}>
           <View style={styles.resultsBox}>
-            <Text style={styles.resultInText}>You could...</Text>
-            <TouchableOpacity
-              style={styles.actionButton}
-              onPress={() => onOptionSelected(Options.SONG)}>
-              <Image
-                style={styles.actionIcon}
-                source={require('../assets/song.png')}
-              />
-              <Text style={styles.actionText}>Play them a song</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.actionButton}
-              onPress={() => onOptionSelected(Options.QUOTE)}>
-              <Image
-                style={styles.actionIcon}
-                source={require('../assets/video.png')}
-              />
-              <Text style={styles.actionText}>Show them a quote</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.actionButton}
-              onPress={() => onOptionSelected(Options.JOKE)}>
-              <Image
-                style={styles.actionIcon}
-                source={require('../assets/joke.png')}
-              />
-              <Text style={styles.actionText}>Tell them a joke</Text>
-            </TouchableOpacity>
+            <Text style={styles.resultInText}>{choice}</Text>
           </View>
         </View>
       </View>
@@ -199,4 +151,4 @@ const EmotionResultsScreen = (props: {
   );
 };
 
-export default EmotionResultsScreen;
+export default ResultScreen;

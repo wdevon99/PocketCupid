@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import MainScreen from '../screens/MainScreen';
+import ResultScreen from '../screens/ResultScreen';
 import IntroScreen from '../screens/IntroScreen';
 import EmotionResultsScreen from '../screens/EmotionResultsScreen';
 import ScanFaceScreen from '../screens/ScanFaceScreen';
@@ -12,9 +12,9 @@ export default function RootNavigation() {
     <NavigationContainer>
       <Stack.Navigator initialRouteName="IntroScreen">
         <Stack.Screen
-          name="MainScreen"
-          options={{headerShown: true}}
-          component={MainScreen}
+          name="ResultScreen"
+          options={{headerShown: false}}
+          component={ResultScreen}
         />
         <Stack.Screen
           name="IntroScreen"

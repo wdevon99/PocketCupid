@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 
 export const AskChatGtp = async (message) => {
-    const CHAT_GPT_API_KEY = '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';
+    const CHAT_GPT_API_KEY = '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';
     const CHAT_GPT_API_URL = 'https://api.openai.com/v1/chat/completions';
 
     const response = await fetch(CHAT_GPT_API_URL, {
